@@ -6,11 +6,12 @@
   <div class="collapse navbar-collapse" id="navbarColor02">
      <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-           <a (click)="onOpenModel(null, 'edit')" class="nav-link">Add Employee <span class="sr-only">(current)</span></a>
+           <a (click)="onOpenModal(null, 'add')" class="nav-link">Add Employee <span class="sr-only">(current)</span></a>
         </li>
      </ul>
      <form class="form-inline my-2 my-lg-0">
-        <input type="search" name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search employees..." required>
+        <input type="search" (ngModelChange)="searchEmployees(key.value)" #key="ngModel" ngModel 
+        name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search employees..." required>
      </form>
   </div>
 </nav>
@@ -34,8 +35,8 @@
                 </ul>
                 <div class="card-body">
                     <div class="float-right btn-group btn-group-sm">
-                        <a (click)="onOpenModel(employee, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
-                        <a (click)="onOpenModel(employee, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
+                        <a (click)="onOpenModal(employee, 'edit')" class="btn btn-primary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Edit"><i class="fa fa-pencil"></i> </a>
+                        <a (click)="onOpenModal(employee, 'delete')" class="btn btn-secondary tooltips" data-placement="top" data-toggle="tooltip" data-original-title="Delete"><i class="fa fa-times"></i></a>
                     </div>
                     <ul class="social-links list-inline mb-0">
                         <li class="list-inline-item"><a title="" data-placement="top" data-toggle="tooltip" class="tooltips" href="" data-original-title="Facebook"><i class="fa fa-facebook-f"></i></a></li>
@@ -59,9 +60,11 @@
           </button>
        </div>
        <div class="modal-body">
-          <form>
+          <!-- we make use of the Angular FormsModule system to auto extract the form element with all the data -->
+          <form #addForm="ngForm" (ngSubmit)="onAddEmployee(addForm)">
           <div class="form-group">
              <label for="name">Name</label>
+             <!-- ngForm system uses the name atribute as a key for that particular input, thats why we add ngModel -->
              <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
           </div>
           <div class="form-group">
@@ -82,7 +85,8 @@
           </div>
           <div class="modal-footer">
              <button type="button" id="add-employee-form" class="btn btn-secondary" data-dismiss="modal">Close</button>
-             <button type="submit" class="btn btn-primary" >Save changes</button>
+             <!-- type of the button needs to be submit for ngSubmit -->
+             <button [disabled]="addForm.invalid" type="submit" class="btn btn-primary" >Save changes</button>
           </div>
           </form>
        </div>
@@ -95,38 +99,38 @@
   <div class="modal-dialog" role="document">
      <div class="modal-content">
         <div class="modal-header">
-           <h5 class="modal-title" id="updateEmployeeModalLabel">Edit Employee</h5>
+           <h5 class="modal-title" id="updateEmployeeModalLabel">Edit Employee: {{selectedEmployee?.name}}</h5>
            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
            <span aria-hidden="true">&times;</span>
            </button>
         </div>
         <div class="modal-body">
-           <form>
+           <form #editForm ="ngForm">
               <div class="form-group">
                  <label for="name">Name</label>
-                 <input type="text"  name="name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name">
+                 <input type="text" ngModel="{{selectedEmployee?.name}}" name="name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name">
               </div>
-              <input type="hidden"  name="id" class="form-control" id="id" placeholder="Email">
-              <input type="hidden"  name="userCode" class="form-control" id="userCode" placeholder="Email">
+              <input type="hidden" ngModel="{{selectedEmployee?.id}}" name="id" class="form-control" id="id" placeholder="Email">
+              <input type="hidden" ngModel="{{selectedEmployee?.employeeCode}}" name="userCode" class="form-control" id="userCode" placeholder="Email">
               <div class="form-group">
                  <label for="email">Email Address</label>
-                 <input type="email"  name="email" class="form-control" id="email" placeholder="Email">
+                 <input type="email" ngModel="{{selectedEmployee?.email}}" name="email" class="form-control" id="email" placeholder="Email">
               </div>
               <div class="form-group">
                  <label for="jobTitle">Job title</label>
-                 <input type="text" name="jobTitle" class="form-control" id="jobTitle" placeholder="Job title">
+                 <input type="text" ngModel="{{selectedEmployee?.jobTitle}}" name="jobTitle" class="form-control" id="jobTitle" placeholder="Job title">
               </div>
               <div class="form-group">
                  <label for="phone">Phone</label>
-                 <input type="text" name="phone" class="form-control" id="phone" name="phone" placeholder="Phone">
+                 <input type="text" ngModel="{{selectedEmployee?.phone}}" name="phone" class="form-control" id="phone" name="phone" placeholder="Phone">
               </div>
               <div class="form-group">
                  <label for="imageUrl">Image URL</label>
-                 <input type="text" name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL">
+                 <input type="text" ngModel="{{selectedEmployee?.imageUrl}}" name="imageUrl" class="form-control" id="imageUrl" placeholder="Image URL">
               </div>
               <div class="modal-footer">
                  <button type="button" id="" data-dismiss="modal" class="btn btn-secondary">Close</button>
-                 <button data-dismiss="modal" class="btn btn-primary" >Save changes</button>
+                 <button (click)="onEditEmployee(editForm.value)" data-dismiss="modal" class="btn btn-primary" >Save changes</button>
               </div>
            </form>
         </div>
@@ -145,10 +149,10 @@
            </button>
         </div>
         <div class="modal-body">
-           <p>Are you sure you want to delete employee?</p>
+           <p>Are you sure you want to delete employee: {{selectedEmployee?.name}}?</p>
            <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-              <button class="btn btn-danger" data-dismiss="modal">Yes</button>
+              <button (click)="onDeleteEmployee(selectedEmployee?.id)" class="btn btn-danger" data-dismiss="modal">Yes</button>
            </div>
         </div>
      </div>
@@ -156,7 +160,7 @@
 </div>
 
 <!-- Notification for no employees -->
-<div class="col-lg-12 col-md-12 col-xl-12">
+<div *ngIf="employees?.length == 0" class="col-lg-12 col-md-12 col-xl-12">
   <div class="alert alert-info" role="alert">
     <h4 class="alert-heading">NO EMPLOYEES!</h4>
     <p>No Employees were found.</p>
