@@ -9,6 +9,15 @@
            <a (click)="onOpenModal(null, 'add')" class="nav-link">Add Employee <span class="sr-only">(current)</span></a>
         </li>
      </ul>
+     <!-- 
+      ngModel is like a data traker for form inputs (it traks certain information about it like: value)
+      Use [(ngModel)]="var" for two-way binding
+      Use ngModel with #ref="ngModel" to access form control info in the template
+
+      #   is how you create a variable for an element or directive in your template
+      #var	  Refers to the HTML element (DOM object): <input #var ...> u can then use <button (click) = "function(#var.value)">
+      #var="ngModel"	Refers to the NgModel directive (form control) 
+     -->
      <form class="form-inline my-2 my-lg-0">
         <input type="search" (ngModelChange)="searchEmployees(key.value)" #key="ngModel" ngModel 
         name="key" id="searchName" class="form-control mr-sm-2" placeholder="Search employees..." required>
@@ -61,6 +70,7 @@
        </div>
        <div class="modal-body">
           <!-- we make use of the Angular FormsModule system to auto extract the form element with all the data -->
+          <!-- ngForm is automatically applied to <form> tags so you dont have to add a ngForm in the atributes like ngModel -->
           <form #addForm="ngForm" (ngSubmit)="onAddEmployee(addForm)">
           <div class="form-group">
              <label for="name">Name</label>
@@ -108,6 +118,10 @@
            <form #editForm ="ngForm">
               <div class="form-group">
                  <label for="name">Name</label>
+                 <!-- 
+                  ngModel="{{value}}" is called Interpolation (one-time) 
+                  it gives the value of the variable to the input value atribute (like a = 2) IT DOESNT BIND THEM 
+                 -->
                  <input type="text" ngModel="{{selectedEmployee?.name}}" name="name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Name">
               </div>
               <input type="hidden" ngModel="{{selectedEmployee?.id}}" name="id" class="form-control" id="id" placeholder="Email">
