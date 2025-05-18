@@ -21,13 +21,18 @@ export class AppComponent implements OnInit{
     this.getEmployees();
   }
 
-  public getEmployees(): void{
-    this.employeeService.getEmployees().subscribe(
-      (response: Employee[]) => {
-      this.employees = response;
-      console.log(this.employees);
-      }
-    );
+  // FIX 1: async implementation to fix search tool issue
+  // we return a promise that is resolved only when we call resolve();
+  public async getEmployees(): Promise<void>{
+    return new Promise((resolve) => {
+      this.employeeService.getEmployees().subscribe(
+        (response: Employee[]) => {
+          this.employees = response;
+          console.log(this.employees);
+          resolve();
+        }
+      );
+    })
   }
 
   public onAddEmployee(addForm: NgForm): void{
@@ -61,8 +66,12 @@ export class AppComponent implements OnInit{
       );
     }
   }
-
-  public searchEmployees(key: string): void{
+  // FIX 1: had to mark function with async to use await
+  // because it does something asyncronous (it waits for a promise)
+  // async functions need to return Promises
+  public async searchEmployees(key: string): Promise<void>{
+    // FIX 1: we wait for the list to update to full before filtering
+    await this.getEmployees();
     const result: Employee[] = [];
     for(const employee of this.employees){
       if(employee.name.toLowerCase().indexOf(key.toLowerCase()) != -1
