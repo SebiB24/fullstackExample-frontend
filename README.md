@@ -110,6 +110,19 @@ http://localhost:4200
 
 ---
 
-## ✅ License
+## UI Screenshots
 
-This project is open-source and available for educational and commercial use.
+![image](https://github.com/user-attachments/assets/505a382a-a4e2-4c9f-9ebf-cba59f9e915d)
+
+![image](https://github.com/user-attachments/assets/5275c727-0cba-4ac4-b58a-da9bcf9946e8)
+
+![image](https://github.com/user-attachments/assets/6e495a34-fce6-467a-bfc9-a0d6e3918430)
+
+![image](https://github.com/user-attachments/assets/80442ecb-158d-4615-acc0-cac04d5d2114)
+
+![image](https://github.com/user-attachments/assets/a9441105-3989-4b18-ab81-71e0f758d303)
+
+
+
+
+
